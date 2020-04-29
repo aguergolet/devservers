@@ -12,7 +12,7 @@ services:
             - "50000:50000"
         volumes:
             - jenkins_home:/var/jenkins_home
-            - "./keys:/var/ssh_keys:"
+            - "./keys:/jenkins:ro"
 volumes:
     jenkins_home:
 
