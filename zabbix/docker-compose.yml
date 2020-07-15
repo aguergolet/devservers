@@ -1,0 +1,44 @@
+version: '3'
+services:
+    mysql-server:
+        image: mariadb
+        ports:
+            - 3306
+        volumes:
+            -  zabbix-proxy-data:/var/lib/mysql
+        env_file:
+            - zbx.env
+        networks:
+            - zabbix-network
+        restart: always
+    zabbix-server:
+        restart: always
+        env_file:
+            - zbx.env
+        volumes:            
+            - "./mibs/:/var/lib/zabbix/mibs:ro"
+        image:  zabbix/zabbix-server-mysql:alpine-5.0-latest
+        depends_on:
+            - mysql-server
+        networks:
+            - zabbix-network
+    zabbix-frontend:
+        restart: always
+        env_file:
+            - zbx.env
+        volumes:            
+            - "./mibs/:/var/lib/zabbix/mibs:ro"
+        image:  zabbix/zabbix-frontend-mysql:alpine-5.0-latest
+        depends_on:
+            - mysql-server
+        networks:
+            - zabbix-network
+
+volumes:
+    zabbix-proxy-data:
+        driver: local
+networks:
+    zabbix-proxy-network:
+        driver: bridge
+        driver_opts:
+          com.docker.network.enable_ipv6: "false"        
