@@ -10,6 +10,12 @@ services:
         ports:
             - "8080:8080"
             - "50000:50000"
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.morcegao_site_dev.rule=Host(`jenkins.guergolet.com.br`)"
+            - "traefik.http.routers.morcegao_site_dev.entrypoints=web,websecure"
+            - "traefik.http.routers.morcegao_site_dev.tls=true" 
+            - "traefik.http.routers.morcegao_site_dev.tls.certresolver=letsencrypt"            
         volumes:
             - jenkins_home:/var/jenkins_home
             - "./keys:/jenkins:ro"
